@@ -1,0 +1,62 @@
+/* Container styling for the sign-up page */
+.signup-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title for the sign-up form */
+.signup-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Form styling */
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Input fields styling */
+.signup-form input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #48bb78;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Button styling */
+.signup-form button {
+    padding: 12px;
+    font-size: 1rem;
+    background-color: #48bb78;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.signup-form button:hover {
+    background-color: #38a169;
+}
+
+/* Error and success message styling */
+.error-message {
+    color: #e53e3e;
+    margin-bottom: 15px;
+}
+
+.success-message {
+    color: #48bb78;
+    margin-bottom: 15px;
+}
