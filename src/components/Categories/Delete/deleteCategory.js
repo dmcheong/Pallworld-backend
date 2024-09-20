@@ -13,7 +13,7 @@ const DeleteCategory = () => {
   // Fonction pour récupérer toutes les catégories
   const fetchCategories = () => {
     axios
-      .get('http://localhost:3005/api/category') // Assurez-vous que l'URL est correcte
+      .get(`${process.env.REACT_APP_API_URL}/api/category`)
       .then((response) => {
         setCategories(response.data);
         setError(null);
@@ -27,7 +27,7 @@ const DeleteCategory = () => {
   const handleDelete = (id) => {
     if (window.confirm('Voulez-vous vraiment supprimer cette catégorie ?')) {
       axios
-        .delete(`http://localhost:3005/api/category/${id}`)
+        .delete(`${process.env.REACT_APP_API_URL}/api/category/${id}`)
         .then(() => {
           setSuccess('Catégorie supprimée avec succès');
           setError(null);

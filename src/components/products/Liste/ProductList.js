@@ -32,7 +32,7 @@ const ProductList = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:3005/api/products");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`);
       const productList = response.data.products || response.data;
       setProducts(productList);
       setDisplayedProducts(productList);
@@ -73,7 +73,7 @@ const ProductList = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:3005/api/products/${productId}`);
+          await axios.delete(`${process.env.REACT_APP_API_URL}/api/products/${productId}`);
           Swal.fire('Supprimé!', 'Le produit a été supprimé.', 'success');
           fetchProducts(); 
         } catch (error) {

@@ -22,7 +22,7 @@ const CreateCategory = () => {
     setError(null);
 
     try {
-      await axios.post("http://localhost:3005/api/category", {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/category`, {
         name: categoryName,
       });
 

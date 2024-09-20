@@ -32,7 +32,7 @@ const CategoriesPage = () => {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:3005/api/category");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/category`);
       setCategories(response.data);
       setDisplayedCategories(response.data);
       setError(null);
@@ -72,7 +72,7 @@ const CategoriesPage = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:3005/api/category/${categoryId}`);
+          await axios.delete(`${process.env.REACT_APP_API_URL}/api/category/${categoryId}`);
           Swal.fire('Supprimé!', 'La catégorie a été supprimée.', 'success');
           fetchCategories(); 
         } catch (error) {
@@ -135,7 +135,7 @@ const CategoriesPage = () => {
                   key={category._id}
                   className="p-4 bg-white border border-gray-300 rounded-lg shadow-md flex justify-between items-center hover:shadow-lg transition-shadow"
                 >
-                  <span className="text-gray-800">{category.name} (ID: {category._id})</span>
+                  <span className="text-gray-800">{category.name}</span>
                   <div className="relative">
                     <button
                       className="text-gray-700 hover:text-black focus:outline-none"

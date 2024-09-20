@@ -13,7 +13,7 @@ const UpdateCategory = () => {
 
     // Récupérer les informations de la catégorie lors du chargement
     useEffect(() => {
-        axios.get(`http://localhost:3005/api/category/${id}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/api/category/${id}`)
             .then(response => {
                 setName(response.data.name); // Remplit le champ avec le nom récupéré
                 setLoading(false);
@@ -33,7 +33,7 @@ const UpdateCategory = () => {
             return;
         }
 
-        axios.put(`http://localhost:3005/api/category/${id}`, { name })
+        axios.put(`${process.env.REACT_APP_API_URL}/api/category/${id}`, { name })
             .then(() => {
                 toast.success('Catégorie mise à jour avec succès', { autoClose: 2000 });
 

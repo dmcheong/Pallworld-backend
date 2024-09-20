@@ -22,8 +22,6 @@ import HomePage from "./components/HomePage /HomePage";
 
 
 //users
-import AddUser from "./components/users/Add/AddUser";
-import DeleteUser from "./components/users/Delete/deleteUser";
 import ListUsers from "./components/users/Liste/ListUsers";
 
 
@@ -55,8 +53,6 @@ function App() {
         
 
         {/* Users Routes */}
-        <Route path="/users/add" element={<AddUser />} />
-        <Route path="/users/delete/:id" element={<DeleteUser />} />
         <Route path="/users" element={<ListUsers />} />
         
         

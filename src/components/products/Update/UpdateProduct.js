@@ -15,7 +15,7 @@ const UpdateProduct = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:3005/api/products/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
         setProduct(response.data);
       } catch (err) {
         setError("Erreur lors de la récupération du produit.");
@@ -37,7 +37,7 @@ const UpdateProduct = () => {
     }
 
     try {
-      await axios.put(`http://localhost:3005/api/products/${id}`, product);
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/products/${id}`, product);
       Swal.fire("Succès", "Le produit a été mis à jour avec succès", "success");
       navigate("/produit");
     } catch (error) {

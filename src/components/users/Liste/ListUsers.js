@@ -19,7 +19,7 @@ const UserList = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:3005/api/users");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/users`);
       setUsers(response.data);
     } catch (error) {
       console.error("Erreur lors de la récupération des utilisateurs:", error);
@@ -49,7 +49,7 @@ const UserList = () => {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:3005/api/users/${userId}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/users/${userId}`);
         setUsers(users.filter((user) => user._id !== userId));
         Swal.fire("Supprimé!", "L'utilisateur a été supprimé.", "success");
       }

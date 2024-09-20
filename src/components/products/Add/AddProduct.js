@@ -24,7 +24,7 @@ const AddProduct = () => {
   // Fetch categories from backend API
   useEffect(() => {
     axios
-      .get("http://localhost:3005/api/category")
+      .get(`${process.env.REACT_APP_API_URL}/api/category`)
       .then((response) => {
         setCategories(response.data);
       })
@@ -83,7 +83,7 @@ const AddProduct = () => {
 
     // Send data to backend API to add product
     axios
-      .post("http://localhost:3005/api/products", productData)
+      .post(`${process.env.REACT_APP_API_URL}/api/products`, productData)
       .then(() => {
         toast.success("Produit ajouté avec succès", { autoClose: 2000 });
         setError(null);
