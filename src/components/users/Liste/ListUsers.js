@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaTrashAlt, FaEdit, FaSearch } from "react-icons/fa"; // Importing the icons, including search
+import { FaTrashAlt, FaSearch } from "react-icons/fa"; // Removed FaEdit
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css"; // Import SweetAlert2 CSS
@@ -33,10 +33,6 @@ const UserList = () => {
   const handleUserClick = (user) => {
     setSelectedUser(user);
     setShowDetails(!showDetails); // Toggle the visibility of user details
-  };
-
-  const handleEditUser = (userId) => {
-    navigate(`/users/update/${userId}`); // Navigate to the update page
   };
 
   const handleDeleteUser = async (userId) => {
@@ -106,14 +102,6 @@ const UserList = () => {
                 <td className="border px-4 py-2">{user.firstName} {user.lastName}</td>
                 <td className="border px-4 py-2">{user.email}</td>
                 <td className="border px-4 py-2 text-center flex justify-center items-center space-x-2">
-                  <FaEdit
-                    className="text-blue-500 hover:text-blue-600 cursor-pointer"
-                    size={20}
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevents opening the details
-                      handleEditUser(user._id);
-                    }}
-                  />
                   <FaTrashAlt
                     className="text-gray-500 hover:text-gray-600 cursor-pointer"
                     size={20}

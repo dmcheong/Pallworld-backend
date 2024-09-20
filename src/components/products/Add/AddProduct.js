@@ -11,11 +11,11 @@ const AddProduct = () => {
   const [price, setPrice] = useState(50);
   const [discountPrice, setDiscountPrice] = useState("");
   const [isPromo, setIsPromo] = useState(false);
-  const [quantity, setQuantity] = useState("");
-  const [images, setImages] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+  const [images, setImages] = useState([""]); // Start with one input
   const [colors, setColors] = useState("");
   const [sizes, setSizes] = useState([]);
-  const [customizationOptions, setCustomizationOptions] = useState("");
+  const [customizationOptions, setCustomizationOptions] = useState([{ position: "", customizationSize: [] }]);
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
@@ -32,6 +32,22 @@ const AddProduct = () => {
         console.error("Erreur lors de la récupération des catégories", error);
       });
   }, []);
+
+  // Handle adding a new image input
+  const handleAddImage = () => {
+    setImages([...images, ""]); // Add an empty string for the new input
+  };
+
+  // Handle customization option updates
+  const handleCustomizationChange = (index, field, value) => {
+    const updatedOptions = [...customizationOptions];
+    if (field === "position") {
+      updatedOptions[index].position = value;
+    } else {
+      updatedOptions[index].customizationSize = value.split(",").map(size => size.trim());
+    }
+    setCustomizationOptions(updatedOptions);
+  };
 
   // Form submission handler
   const handleSubmit = (event) => {
@@ -59,9 +75,9 @@ const AddProduct = () => {
       isPromo,
       quantity,
       images,
-      colors: colors.split(",").map((color) => color.trim()),
+      colors: colors.split(",").map(color => color.trim()),
       sizes,
-      customizationOptions: customizationOptions || null,
+      customizationOptions,
       category: [category],
     };
 
@@ -79,11 +95,11 @@ const AddProduct = () => {
         setPrice(50);
         setDiscountPrice("");
         setIsPromo(false);
-        setQuantity("");
-        setImages([]);
+        setQuantity(1);
+        setImages([""]); // Reset to one input
         setColors("");
         setSizes([]);
-        setCustomizationOptions("");
+        setCustomizationOptions([{ position: "", customizationSize: [] }]);
         setCategory("");
 
         // Redirect to product page
@@ -113,6 +129,7 @@ const AddProduct = () => {
               onChange={(e) => setName(e.target.value)}
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               placeholder="Entrez le nom du produit"
+              required
             />
           </div>
 
@@ -124,6 +141,7 @@ const AddProduct = () => {
               onChange={(e) => setDescription(e.target.value)}
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               placeholder="Entrez la description du produit"
+              required
             />
           </div>
 
@@ -135,6 +153,7 @@ const AddProduct = () => {
               onChange={(e) => setCharacteristics(e.target.value)}
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               placeholder="Entrez les caractéristiques du produit"
+              required
             />
           </div>
 
@@ -144,11 +163,19 @@ const AddProduct = () => {
             <input
               type="number"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              min="0.01"
-              step="0.01"
+              onChange={(e) => {
+                const value = parseFloat(e.target.value);
+                if (!isNaN(value) && value >= 0) {
+                  setPrice(value); // Ensure valid price
+                } else if (e.target.value === "") {
+                  setPrice(""); // Allow clearing the field
+                }
+              }}
+              min="0"
+              step="0.01" // Allows two decimal places
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               placeholder="Entrez le prix du produit"
+              required
             />
           </div>
 
@@ -158,7 +185,7 @@ const AddProduct = () => {
             <input
               type="number"
               value={discountPrice}
-              onChange={(e) => setDiscountPrice(e.target.value)}
+              onChange={(e) => setDiscountPrice(Number(e.target.value))}
               min="0"
               step="0.01"
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
@@ -172,10 +199,11 @@ const AddProduct = () => {
             <input
               type="number"
               value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
+              onChange={(e) => setQuantity(Number(e.target.value))}
               min="1"
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               placeholder="Entrez la quantité de produit"
+              required
             />
           </div>
 
@@ -193,14 +221,28 @@ const AddProduct = () => {
 
           {/* Image URLs */}
           <div className="sm:col-span-2">
-            <label className="block text-gray-700 mb-2 font-semibold">URL des images (séparées par des virgules)</label>
-            <input
-              type="text"
-              value={images.join(", ")}
-              onChange={(e) => setImages(e.target.value.split(",").map((url) => url.trim()))}
-              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="Entrez les URL des images"
-            />
+            <label className="block text-gray-700 mb-2 font-semibold">URL des images</label>
+            {images.map((image, index) => (
+              <input
+                key={index}
+                type="url"
+                value={image}
+                onChange={(e) => {
+                  const updatedImages = [...images];
+                  updatedImages[index] = e.target.value;
+                  setImages(updatedImages);
+                }}
+                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 mb-3"
+                placeholder="Entrez l'URL de l'image"
+              />
+            ))}
+            <button
+              type="button"
+              onClick={handleAddImage}
+              className="mt-2 text-purple-600 hover:underline"
+            >
+              Ajouter une autre image
+            </button>
           </div>
 
           {/* Sizes */}
@@ -228,6 +270,7 @@ const AddProduct = () => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              required
             >
               <option value="">Sélectionnez une catégorie</option>
               {categories.map((c) => (
@@ -240,13 +283,32 @@ const AddProduct = () => {
 
           {/* Customization Options */}
           <div className="sm:col-span-2">
-            <label className="block text-gray-700 mb-2 font-semibold">Options de personnalisation (optionnel)</label>
-            <textarea
-              value={customizationOptions}
-              onChange={(e) => setCustomizationOptions(e.target.value)}
-              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="Entrez les options de personnalisation"
-            />
+            <label className="block text-gray-700 mb-2 font-semibold">Options de personnalisation</label>
+            {customizationOptions.map((option, index) => (
+              <div key={index} className="flex flex-col mb-3">
+                <input
+                  type="text"
+                  placeholder="Position"
+                  value={option.position}
+                  onChange={(e) => handleCustomizationChange(index, "position", e.target.value)}
+                  className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 mb-2"
+                />
+                <input
+                  type="text"
+                  placeholder="Tailles personnalisables (séparées par des virgules)"
+                  value={option.customizationSize.join(", ")}
+                  onChange={(e) => handleCustomizationChange(index, "customizationSize", e.target.value)}
+                  className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                />
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => setCustomizationOptions([...customizationOptions, { position: "", customizationSize: [] }])}
+              className="mt-2 text-purple-600 hover:underline"
+            >
+              Ajouter une option de personnalisation
+            </button>
           </div>
 
           {/* Submit Button */}

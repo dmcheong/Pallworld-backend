@@ -25,7 +25,6 @@ import HomePage from "./components/HomePage /HomePage";
 import AddUser from "./components/users/Add/AddUser";
 import DeleteUser from "./components/users/Delete/deleteUser";
 import ListUsers from "./components/users/Liste/ListUsers";
-import UpdateUser from "./components/users/Update/UpdateUser";
 
 
 //orders
@@ -59,7 +58,6 @@ function App() {
         <Route path="/users/add" element={<AddUser />} />
         <Route path="/users/delete/:id" element={<DeleteUser />} />
         <Route path="/users" element={<ListUsers />} />
-        <Route path="/users/update/:id" element={<UpdateUser />} />
         
         
         
