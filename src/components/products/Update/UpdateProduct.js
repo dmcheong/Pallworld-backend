@@ -29,6 +29,13 @@ const UpdateProduct = () => {
   // Fonction pour gérer la soumission du formulaire de mise à jour
   const handleUpdateProduct = async (e) => {
     e.preventDefault();
+
+    // Validate that price is a positive number
+    if (product.price <= 0) {
+      Swal.fire("Erreur", "Le prix doit être un nombre positif.", "error");
+      return;
+    }
+
     try {
       await axios.put(`http://localhost:3005/api/products/${id}`, product);
       Swal.fire("Succès", "Le produit a été mis à jour avec succès", "success");
