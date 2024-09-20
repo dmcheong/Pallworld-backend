@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the styles
 
 const CreateCategory = () => {
   const [categoryName, setCategoryName] = useState("");
@@ -23,8 +25,13 @@ const CreateCategory = () => {
       await axios.post("http://localhost:3005/api/category", {
         name: categoryName,
       });
+
       setCategoryName("");
-      navigate("/categories");
+      toast.success("Catégorie créée avec succès!", { autoClose: 2000 }); // Show success notification
+
+      setTimeout(() => {
+        navigate("/categories"); // Redirect after a short delay
+      }, 2000);
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message) {
         setError(`Erreur: ${err.response.data.message}`);
@@ -42,8 +49,8 @@ const CreateCategory = () => {
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-gray-100">
       <div className="bg-white p-12 rounded-xl shadow-lg max-w-3xl w-full transform transition duration-300 hover:shadow-2xl">
         <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800">
-  Liste des Catégories
-</h1>
+          Créer une Catégorie
+        </h1>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
           <div className="relative mb-6">
             <input
@@ -70,7 +77,11 @@ const CreateCategory = () => {
             {loading ? "Création en cours..." : "Créer"}
           </button>
         </form>
+
         {error && <p className="text-red-500 mt-6 text-center">{error}</p>}
+
+        {/* ToastContainer for displaying notifications */}
+        <ToastContainer />
       </div>
     </div>
   );

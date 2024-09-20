@@ -51,10 +51,10 @@ function Header() {
 
         {/* Navigation Links below the logo */}
         <nav className="flex flex-wrap justify-center space-x-6 font-semibold text-gray-700 tracking-wide">
-          <Link to="/categories/add" className="text-sm sm:text-base hover:text-sky-600 transition duration-300">
+          <Link to="/categories" className="text-sm sm:text-base hover:text-sky-600 transition duration-300">
             Gestion Catégories
           </Link>
-          <Link to="/produit/add" className="text-sm sm:text-base hover:text-sky-600 transition duration-300">
+          <Link to="/produit" className="text-sm sm:text-base hover:text-sky-600 transition duration-300">
             Gestion Produits
           </Link>
           <Link to="/users" className="text-sm sm:text-base hover:text-sky-600 transition duration-300">

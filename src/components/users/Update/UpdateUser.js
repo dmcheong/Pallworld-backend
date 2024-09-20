@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa'; // Icone de la flèche de retour
 
 const UpdateUser = () => {
   const { id } = useParams(); // Récupère l'ID de l'utilisateur depuis l'URL
@@ -71,9 +72,18 @@ const UpdateUser = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-4xl">
-        <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">Modifier les informations de l'utilisateur</h1>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-gray-100">
+      <div className="bg-white p-12 rounded-xl shadow-lg max-w-4xl w-full transform transition duration-300 hover:shadow-2xl">
+        {/* Flèche de retour et Titre */}
+        <div className="flex justify-between items-center mb-8">
+          <button onClick={() => navigate('/users')} className="text-purple-600 hover:text-purple-800">
+            <FaArrowLeft size={24} />
+          </button>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center">
+            Modifier les informations de l'utilisateur
+          </h1>
+          <div></div>
+        </div>
 
         {loading ? (
           <p className="text-center">Chargement...</p>
@@ -90,7 +100,7 @@ const UpdateUser = () => {
                   placeholder="Prénom"
                   value={userData.firstName}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
 
@@ -102,7 +112,7 @@ const UpdateUser = () => {
                   placeholder="Nom"
                   value={userData.lastName}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
 
@@ -114,7 +124,7 @@ const UpdateUser = () => {
                   placeholder="Email"
                   value={userData.email}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
 
@@ -126,7 +136,7 @@ const UpdateUser = () => {
                   placeholder="Mot de passe"
                   value={userData.password}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
 
@@ -138,7 +148,7 @@ const UpdateUser = () => {
                   placeholder="Téléphone"
                   value={userData.phone}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
 
@@ -150,7 +160,7 @@ const UpdateUser = () => {
                   placeholder="Pays"
                   value={userData.country}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
 
@@ -162,7 +172,7 @@ const UpdateUser = () => {
                   placeholder="Ville"
                   value={userData.city}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
 
@@ -174,7 +184,7 @@ const UpdateUser = () => {
                   placeholder="Adresse"
                   value={userData.address}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
 
@@ -186,7 +196,7 @@ const UpdateUser = () => {
                   placeholder="Code Postal"
                   value={userData.codePostal}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
 
@@ -198,7 +208,7 @@ const UpdateUser = () => {
                   placeholder="Crédits"
                   value={userData.credits}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-3 border-2 border-purple-500 rounded-lg focus:outline-none focus:border-purple-700"
                 />
               </div>
             </div>
@@ -206,7 +216,7 @@ const UpdateUser = () => {
             <div className="flex justify-center mt-6">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+                className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition duration-300"
               >
                 Mettre à jour
               </button>

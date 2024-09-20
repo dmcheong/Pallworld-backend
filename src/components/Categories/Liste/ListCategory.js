@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaEllipsisV } from "react-icons/fa";
+import { FaEllipsisV, FaPlus } from "react-icons/fa";
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss"; 
 
@@ -85,9 +85,25 @@ const CategoriesPage = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-gray-100">
       <div className="bg-white p-12 rounded-xl shadow-lg max-w-4xl w-full transform transition duration-300 hover:shadow-2xl">
-        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800">
-          Liste des Catégories
-        </h1>
+        {/* Titre centré et icône + */}
+        <div className="flex justify-center items-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 text-center">
+            Liste des Catégories
+          </h1>
+          {/* Icône + pour ajouter une nouvelle catégorie */}
+          <div className="relative group ml-4">
+            <button
+              className="bg-purple-500 text-white p-3 rounded-full shadow-md hover:bg-purple-600 transition-all"
+              onClick={() => navigate("/categories/add")}
+            >
+              <FaPlus />
+            </button>
+            {/* Tooltip au survol de l'icône */}
+            <span className="absolute top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              Ajouter une catégorie
+            </span>
+          </div>
+        </div>
 
         {/* Formulaire de recherche */}
         <form onSubmit={(e) => e.preventDefault()} className="flex justify-center items-center w-full mb-8">

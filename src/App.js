@@ -11,6 +11,7 @@ import DeleteCategory from "./components/Categories/Delete/deleteCategory";
 import ProductList from "./components/products/Liste/ProductList"
 import AddProduct from "./components/products/Add/AddProduct";
 import UpdateProduct from "./components/products/Update/UpdateProduct";
+import ProductDetails from "./components/products/ProductDetails/ProductDetails";
 
 //Header
 import Header from "./components/Header/header";
@@ -29,8 +30,8 @@ import UpdateUser from "./components/users/Update/UpdateUser";
 
 //orders
 
-import AllOrders from "./components/ordres/AllOrders";
-import OrderDetails from "./components/ordres/OrderDetail";
+import AllOrders from "./components/Ordres/AllOrders";
+import OrderDetails from "./components/Ordres/OrderDetail";
 
 
 function App() {
@@ -49,6 +50,8 @@ function App() {
         <Route path="/produit" element={< ProductList/>} />
         <Route path="/produit/add" element={<AddProduct />} />
         <Route path="/produit/update/:id" element={<UpdateProduct />} />
+        <Route path="/produit/details/:productId" element={<ProductDetails />} />
+
 
         
 

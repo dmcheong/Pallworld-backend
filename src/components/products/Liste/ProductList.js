@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaEllipsisV } from "react-icons/fa";
+import { FaEllipsisV, FaPlus } from "react-icons/fa"; // Importation de FaPlus pour le bouton +
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 
@@ -86,10 +86,27 @@ const ProductList = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-gray-100">
       <div className="bg-white p-12 rounded-xl shadow-lg max-w-4xl w-full transform transition duration-300 hover:shadow-2xl">
-        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800">
-          Liste des Produits
-        </h1>
-        
+        {/* Titre et icône + */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
+            Liste des Produits
+          </h1>
+          {/* Icône + pour ajouter un nouveau produit */}
+          <div className="relative group">
+            <button
+              className="bg-purple-500 text-white p-3 rounded-full shadow-md hover:bg-purple-600 transition-all"
+              onClick={() => navigate("/produit/add")}
+            >
+              <FaPlus />
+            </button>
+            {/* Tooltip au survol de l'icône */}
+            <span className="absolute top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              Ajouter un produit
+            </span>
+          </div>
+        </div>
+
+        {/* Formulaire de recherche */}
         <form onSubmit={(e) => e.preventDefault()} className="flex justify-center items-center w-full mb-8">
           <input
             type="text"
@@ -118,14 +135,18 @@ const ProductList = () => {
                 <li
                   key={product._id}
                   className="p-4 mb-3 bg-white border border-gray-200 rounded-lg shadow-sm flex justify-between items-center hover:shadow-md transition-shadow relative"
+                  onClick={() => navigate(`/produit/details/${product._id}`)} // Rediriger vers la page des détails du produit
                 >
-                  <span className="text-purple-700">
+                  <span className="text-purple-700 cursor-pointer">
                     {product.name || "Nom non disponible"} - {product.price ? `${product.price} €` : "Prix non disponible"}
                   </span>
                   <div className="relative">
                     <button
                       className="text-gray-700 hover:text-black focus:outline-none"
-                      onClick={() => toggleMenu(index)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Empêche le clic sur le bouton d'affecter la redirection
+                        toggleMenu(index);
+                      }}
                     >
                       <FaEllipsisV />
                     </button>
