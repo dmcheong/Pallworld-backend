@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [characteristics, setCharacteristics] = useState("");
-  const [price, setPrice] = useState(50);
+  const [price, setPrice] = useState(""); // Allow empty string
   const [discountPrice, setDiscountPrice] = useState("");
   const [isPromo, setIsPromo] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [images, setImages] = useState([""]); // Start with one input
+  const [images, setImages] = useState([""]); // Start with one input for image URLs
   const [colors, setColors] = useState("");
   const [sizes, setSizes] = useState([]);
   const [customizationOptions, setCustomizationOptions] = useState([{ position: "", customizationSize: [] }]);
@@ -21,7 +21,7 @@ const AddProduct = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch categories from backend API
+  // Fetch available categories from backend
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/category`)
@@ -35,7 +35,7 @@ const AddProduct = () => {
 
   // Handle adding a new image input
   const handleAddImage = () => {
-    setImages([...images, ""]); // Add an empty string for the new input
+    setImages([...images, ""]); // Add an empty input for a new image
   };
 
   // Handle customization option updates
@@ -44,7 +44,7 @@ const AddProduct = () => {
     if (field === "position") {
       updatedOptions[index].position = value;
     } else {
-      updatedOptions[index].customizationSize = value.split(",").map(size => size.trim());
+      updatedOptions[index].customizationSize = value.split(",").map((size) => size.trim());
     }
     setCustomizationOptions(updatedOptions);
   };
@@ -53,56 +53,60 @@ const AddProduct = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Validation
-    if (!name || price <= 0 || !quantity || quantity <= 0 || !category) {
+    // Validation du prix et des autres champs
+    const parsedPrice = parseFloat(price); // Ensure price is parsed correctly
+    if (!name || isNaN(parsedPrice) || parsedPrice < 0 || quantity <= 0 || !category) {
       setError("Merci de remplir tous les champs obligatoires avec des valeurs valides.");
       return;
     }
 
-    // Handle discount price if promo is active
-    if (isPromo && (!discountPrice || discountPrice <= 0 || discountPrice >= price)) {
+    // Gestion du prix réduit si la promo est active
+    if (isPromo && (!discountPrice || discountPrice <= 0 || discountPrice >= parsedPrice)) {
       setError("Le prix réduit doit être inférieur au prix normal.");
       return;
     }
 
-    // Prepare product data for API
+    // Préparation des données du produit pour l'API
     const productData = {
       name,
       description,
       characteristics,
-      price,
+      price: parsedPrice,
       discountPrice: isPromo ? discountPrice : null,
       isPromo,
       quantity,
       images,
-      colors: colors.split(",").map(color => color.trim()),
+      colors: colors.split(",").map((color) => color.trim()), // Séparation des couleurs par virgules
       sizes,
       customizationOptions,
-      category: [category],
+      category: [category], // Une seule catégorie sélectionnée
     };
 
-    // Send data to backend API to add product
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/api/products`, productData)
-      .then(() => {
+    // Log des données envoyées au backend
+    console.log("Données du produit avant l'envoi :", productData);
+
+    // Envoi des données à l'API pour ajouter le produit
+    axios.post(`${process.env.REACT_APP_API_URL}/api/products`, productData)
+      .then((response) => {
+        console.log("Réponse de l'API :", response.data);
         toast.success("Produit ajouté avec succès", { autoClose: 2000 });
         setError(null);
 
-        // Reset form fields
+        // Réinitialisation des champs après l'ajout
         setName("");
         setDescription("");
         setCharacteristics("");
-        setPrice(50);
+        setPrice(""); // Autoriser une chaîne vide comme valeur initiale
         setDiscountPrice("");
         setIsPromo(false);
         setQuantity(1);
-        setImages([""]); // Reset to one input
+        setImages([""]); // Réinitialiser à un champ d'URL d'image
         setColors("");
         setSizes([]);
         setCustomizationOptions([{ position: "", customizationSize: [] }]);
         setCategory("");
 
-        // Redirect to product page
+        // Redirection après succès de l'ajout
         setTimeout(() => {
           navigate("/produit");
         }, 2000);
@@ -161,18 +165,9 @@ const AddProduct = () => {
           <div className="sm:col-span-2">
             <label className="block text-gray-700 mb-2 font-semibold">Prix (en euros)</label>
             <input
-              type="number"
+              type="text" // Changed to text to allow empty string
               value={price}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (!isNaN(value) && value >= 0) {
-                  setPrice(value); // Ensure valid price
-                } else if (e.target.value === "") {
-                  setPrice(""); // Allow clearing the field
-                }
-              }}
-              min="0"
-              step="0.01" // Allows two decimal places
+              onChange={(e) => setPrice(e.target.value)} // Keep string value temporarily
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               placeholder="Entrez le prix du produit"
               required
@@ -180,18 +175,20 @@ const AddProduct = () => {
           </div>
 
           {/* Discount Price */}
-          <div className="sm:col-span-2">
-            <label className="block text-gray-700 mb-2 font-semibold">Prix réduit (optionnel)</label>
-            <input
-              type="number"
-              value={discountPrice}
-              onChange={(e) => setDiscountPrice(Number(e.target.value))}
-              min="0"
-              step="0.01"
-              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="Entrez le prix réduit du produit"
-            />
-          </div>
+          {isPromo && (
+            <div className="sm:col-span-2">
+              <label className="block text-gray-700 mb-2 font-semibold">Prix réduit (optionnel)</label>
+              <input
+                type="number"
+                value={discountPrice}
+                onChange={(e) => setDiscountPrice(Number(e.target.value))}
+                min="0"
+                step="0.01"
+                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                placeholder="Entrez le prix réduit du produit"
+              />
+            </div>
+          )}
 
           {/* Quantity */}
           <div className="sm:col-span-2">
