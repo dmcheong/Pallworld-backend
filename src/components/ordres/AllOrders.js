@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import navigation hook
+import { useNavigate } from 'react-router-dom';
 
 const AllOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Use navigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAllOrders = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders`); // Fetch all orders
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders`);
         setOrders(response.data);
         setLoading(false);
       } catch (err) {
@@ -23,9 +23,8 @@ const AllOrders = () => {
     fetchAllOrders();
   }, []);
 
-  // Handle click on a row to navigate to the details page
-  const handleOrderClick = (orderId) => {
-    navigate(`/orders/${orderId}`); // Navigate to order details page
+  const handleOrderClick = (userId) => {
+    navigate(`/orders/${userId}`); // Navigate to all orders by userId
   };
 
   return (
@@ -56,7 +55,7 @@ const AllOrders = () => {
                   <tr
                     key={order._id}
                     className="hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleOrderClick(order._id)} // On click, navigate to the details page
+                    onClick={() => handleOrderClick(order.userId._id)} // Pass userId to fetch all orders by that user
                   >
                     <td className="border px-4 py-2">{order._id}</td>
                     <td className="border px-4 py-2">

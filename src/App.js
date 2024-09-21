@@ -20,15 +20,13 @@ import Footer from "./components/Footer/Footer";
 //home page
 import HomePage from "./components/HomePage /HomePage";
 
-
 //users
 import ListUsers from "./components/users/Liste/ListUsers";
 
-
 //orders
 
-import AllOrders from "./components/Ordres/AllOrders";
-import OrderDetails from "./components/Ordres/OrderDetail";
+import AllOrders from "./components/ordres/AllOrders";
+import OrderDetails from "./components/ordres/OrderDetail";
 
 
 function App() {
@@ -48,19 +46,15 @@ function App() {
         <Route path="/produit/add" element={<AddProduct />} />
         <Route path="/produit/update/:id" element={<UpdateProduct />} />
         <Route path="/produit/details/:productId" element={<ProductDetails />} />
-
-
         
-
         {/* Users Routes */}
         <Route path="/users" element={<ListUsers />} />
-        
-        
+    
         
 
         {/* orders routes */}
         <Route path="/orders" element={<AllOrders />} />
-        <Route path="/orders/:orderId" element={<OrderDetails />} />
+        <Route path="/orders/:userId" element={<OrderDetails />} />
 
          {/* home page routes */}
          <Route path="/homepage" element={<HomePage />} />

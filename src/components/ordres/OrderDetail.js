@@ -1,118 +1,72 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa'; // Importing the back arrow icon
 
-const OrderDetails = () => {
-  const { orderId } = useParams(); // Get order ID from the URL
-  const navigate = useNavigate(); // Hook to navigate between routes
-  const [order, setOrder] = useState(null); // Initialize as null
+const OrderDetail = () => {
+  const { userId } = useParams();  // Extraire userId de l'URL
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch order details when component mounts
   useEffect(() => {
-    const fetchOrderDetails = async () => {
+    const fetchUserOrders = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/${orderId}`); // Fetch order details by ID
-        setOrder(response.data);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/${userId}`);
+        setOrders(response.data);
         setLoading(false);
       } catch (err) {
-        setError('Erreur lors de la récupération des détails de la commande.');
+        setError('Erreur lors de la récupération des commandes.');
         setLoading(false);
       }
     };
 
-    fetchOrderDetails();
-  }, [orderId]);
+    fetchUserOrders();
+  }, [userId]);
 
-  // Loading and error handling
   if (loading) {
-    return <p className="text-center">Chargement...</p>;
+    return <p className="text-center text-blue-500">Chargement...</p>;
   }
 
   if (error) {
     return <p className="text-red-500 text-center">{error}</p>;
   }
 
-  // Render order details once the data is available
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <button
-        className="flex items-center mb-6 text-blue-500 hover:text-blue-600"
-        onClick={() => navigate('/orders')} // Navigate to the orders list
-      >
-        <FaArrowLeft className="mr-2" /> Retour aux commandes
-      </button>
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+      <h1 className="text-2xl font-bold text-blue-500 mb-6">Détails de la commande</h1>
+      {orders.length === 0 ? (
+        <p className="text-center text-gray-500">Aucune commande trouvée.</p>
+      ) : (
+        orders.map((order) => (
+          <div key={order._id} className="border-b border-gray-200 mb-4 pb-4">
+            <h2 className="text-lg font-semibold text-gray-800">Commande ID: {order._id}</h2>
+            <div className="mt-2">
+              <p><span className="font-medium">Nom :</span> {order.userId?.firstName} {order.userId?.lastName}</p>
+              <p><span className="font-medium">Email :</span> {order.userId?.email}</p>
+            </div>
 
-      <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">Détails de la commande</h1>
+            <div className="mt-4">
+              <h3 className="font-semibold text-gray-800">Articles commandés :</h3>
+              <ul className="mt-2 space-y-2">
+                {order.items.map((item, index) => (
+                  <li key={index} className="bg-gray-50 p-4 rounded-lg shadow-md">
+                    <p><span className="font-medium">Produit :</span> {item.productId ? item.productId.name : 'Produit non trouvé'}</p>
+                    <p><span className="font-medium">Quantité :</span> {item.quantity}</p>
+                    <p><span className="font-medium">Prix :</span> {item.price} €</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-      {order && (
-        <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl mx-auto">
-          <h2 className="text-2xl font-semibold mb-4">Commande ID: {order._id}</h2>
-
-          {/* User Info */}
-          <h3 className="text-xl font-semibold mb-2">Utilisateur:</h3>
-          <p>
-            Nom: {order.userId ? `${order.userId.firstName} ${order.userId.lastName}` : 'Utilisateur non trouvé'}<br />
-            Email: {order.userId ? order.userId.email : 'Non disponible'}
-          </p>
-
-          {/* Order Items */}
-          <h3 className="text-xl font-semibold mt-6 mb-2">Articles commandés:</h3>
-          <ul className="list-disc list-inside">
-            {order.items && order.items.length > 0 ? (
-              order.items.map((item, index) => (
-                <li key={index} className="mb-4">
-                  <div>
-                    Produit: {item.productId ? item.productId.name : 'Produit non trouvé'} <br />
-                    Quantité: {item.quantity} <br />
-                    Prix: {item.price} € <br />
-                    Couleur: {item.color ? item.color : 'Non spécifié'} <br />
-                    Taille: {item.size ? item.size : 'Non spécifié'}
-                  </div>
-                  {item.customizationOptions && item.customizationOptions.length > 0 && (
-                    <div className="mt-2">
-                      <strong>Options de personnalisation:</strong>
-                      <ul className="list-inside list-disc ml-4">
-                        {item.customizationOptions.map((custom, customIndex) => (
-                          <li key={customIndex}>
-                            Position: {custom.position} <br />
-                            Taille: {custom.customizationSize} <br />
-                            Image: <a href={custom.imageUrl} target="_blank" rel="noopener noreferrer">Voir l'image</a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </li>
-              ))
-            ) : (
-              <li>Aucun article trouvé</li>
-            )}
-          </ul>
-
-          {/* Total Amount */}
-          <h3 className="text-xl font-semibold mt-6 mb-2">Montant total: {order.totalAmount} €</h3>
-
-          {/* Shipping Address */}
-          <h3 className="text-xl font-semibold mt-6 mb-2">Adresse de livraison:</h3>
-          {order.shippingAddress ? (
-            <p>
-              {order.shippingAddress.name}<br />
-              {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.postalCode}
-            </p>
-          ) : (
-            <p>Adresse non disponible</p>
-          )}
-
-          {/* Created At */}
-          <h3 className="text-xl font-semibold mt-6 mb-2">Date de création:</h3>
-          <p>{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'Date non disponible'}</p>
-        </div>
+            <div className="mt-4">
+              <p className="text-lg font-semibold">Montant Total: {order.totalAmount} €</p>
+              <p className="text-gray-600">Date de création : {new Date(order.createdAt).toLocaleDateString()}</p>
+            </div>
+          </div>
+        ))
       )}
     </div>
   );
 };
 
-export default OrderDetails;
+export default OrderDetail;
